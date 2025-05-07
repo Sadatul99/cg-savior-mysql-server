@@ -1,0 +1,120 @@
+User Table
+
+-- Step 1: Select the database
+USE saviorDb;
+
+-- Step 2: Create the users table
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(100) UNIQUE NOT NULL,
+  role VARCHAR(50) DEFAULT 'user'
+);
+
+
+CREATE TABLE IF NOT EXISTS courses (
+    course_code VARCHAR(20) PRIMARY KEY NOT NULL,
+    course_title VARCHAR(255) NOT NULL,
+    pre_requisite VARCHAR(50),
+    soft_pre_requisite VARCHAR(50),
+    lab BOOLEAN,
+    credit DECIMAL(3,1),
+    course_description TEXT
+);
+
+INSERT INTO courses 
+(course_code, course_title, pre_requisite, soft_pre_requisite, lab, credit, course_description)
+VALUES
+(
+    'CSE110',
+    'Programming Language I',
+    'N/A',
+    'N/A',
+    TRUE,
+    3,
+    'Introduction to programming fundamentals including flow control, arrays, and debugging.'
+),
+(
+    'CSE111',
+    'Programming Language II',
+    'CSE110',
+    'N/A',
+    TRUE,
+    3,
+    'Covers data structures, language theory, and structured programming concepts.'
+),
+(
+    'CSE220',
+    'Data Structures',
+    'CSE111',
+    'N/A',
+    TRUE,
+    3,
+    'Focuses on arrays, stacks, queues, trees, graphs, and algorithm efficiency.'
+);
+
+
+
+CREATE TABLE resources (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  course_code VARCHAR(10),
+  description TEXT,
+  publishers_name VARCHAR(100),
+  type VARCHAR(50),
+  link TEXT,
+  vote INT DEFAULT 0,
+  FOREIGN KEY (course_code) REFERENCES courses(course_code) ON DELETE CASCADE
+);
+
+
+
+INSERT INTO resources (course_code, description, publishers_name, type, link, vote) VALUES
+('CSE110', 'MSI Playlist', 'Sadatul Hossain', 'youtube', 'https://youtube.com/playlist?list=PLtQXTSdoymQfo173BJeLyMZ9KlI7tORwW', 0),
+('CSE110', 'TAW Python Playlist', 'Sadatul Hossain', 'youtube', 'https://www.youtube.com/playlist?list=PLvr0Ht-XkB_0V-mjAYlfgk-3VRmFarlzC', 0);
+
+CREATE TABLE IF NOT EXISTS classroom (
+    class_code VARCHAR(50) PRIMARY KEY,
+    course_code VARCHAR(20),
+    email VARCHAR(100),
+    faculty_initial VARCHAR(20),
+    section VARCHAR(10),
+    semester VARCHAR(20),
+    FOREIGN KEY (course_code) REFERENCES courses(course_code) ON DELETE CASCADE
+);
+
+INSERT INTO classroom 
+(class_code, course_code, email, faculty_initial, section, semester)
+VALUES
+(
+    'class1',
+    'CSE110',
+    'faculty@email.com',
+    'TBA',
+    '01',
+    'FALL2025'
+),
+(
+    'class2',
+    'CSE110',
+    'faculty@email.com',
+    'TBA',
+    '02',
+    'FALL2025'
+);
+
+CREATE TABLE IF NOT EXISTS classResources (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    class_code VARCHAR(50),
+    course_code VARCHAR(20),
+    description TEXT,
+    type VARCHAR(50),
+    link TEXT,
+    FOREIGN KEY (class_code) REFERENCES classroom(class_code) ON DELETE CASCADE,
+    FOREIGN KEY (course_code) REFERENCES courses(course_code) ON DELETE CASCADE
+);
+
+-- Insert sample data
+INSERT INTO classResources (class_code, course_code, description, type, link) VALUES
+('class1', 'CSE110', 'MSI Playlist', 'youtube', 'https://youtube.com/playlist?list=PLtQXTSdoymQfo173BJeLyMZ9KlI7tORwW'),
+('class1', 'CSE110', 'MSI Playlist', 'youtube', 'https://youtube.com/playlist?list=PLtQXTSdoymQfo173BJeLyMZ9KlI7tORwW');
+
