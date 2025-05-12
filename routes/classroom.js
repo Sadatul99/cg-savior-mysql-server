@@ -13,6 +13,21 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Check if class_code is unique
+router.get('/check-class-code/:code', async (req, res) => {
+  const code = req.params.code.trim().toUpperCase();
+  try {
+    const [rows] = await pool.query(
+      'SELECT 1 FROM classroom WHERE UPPER(class_code) = ? LIMIT 1',
+      [code]
+    );
+    res.json({ exists: rows.length > 0 });
+  } catch (err) {
+    console.error('Error checking class_code:', err);
+    res.status(500).json({ error: 'Failed to check class code' });
+  }
+});
+
 // Get a classroom by class_code
 router.get('/:class_code', async (req, res) => {
   const { class_code } = req.params;

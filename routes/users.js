@@ -1,7 +1,7 @@
 import express from 'express';
 import pool from '../db.js';
-// import verifyToken from '../middlewares/verifyToken.js';
-// import verifyAdmin from '../middlewares/verifyAdmin.js';
+import verifyToken from '../middlewares/verifyToken.js';
+
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 // Check if email is admin
-router.get('/admin/:email', async (req, res) => {
+router.get('/admin/:email',verifyToken, async (req, res) => {
   const email = req.params.email;
 
   if (email !== req.decoded.email) {
@@ -29,7 +29,7 @@ router.get('/admin/:email', async (req, res) => {
 });
 
 // Check if email is faculty
-router.get('/faculty/:email', async (req, res) => {
+router.get('/faculty/:email',verifyToken, async (req, res) => {
   const email = req.params.email;
 
   if (email !== req.decoded.email) {

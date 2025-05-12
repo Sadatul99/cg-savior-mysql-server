@@ -11,6 +11,13 @@ CREATE TABLE IF NOT EXISTS users (
   role VARCHAR(50) DEFAULT 'user'
 );
 
+INSERT INTO users (name, email, role) VALUES
+  
+  ('admin', 'admin@email.com', 'admin'),
+  ('faculty', 'faculty@email.com', 'faculty'),
+  ('user', 'user@email.com', 'user');
+
+
 
 CREATE TABLE IF NOT EXISTS courses (
     course_code VARCHAR(20) PRIMARY KEY NOT NULL,
